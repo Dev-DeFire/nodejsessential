@@ -29,7 +29,7 @@ app.get('/music', ( req, res) => {
             Data :  allMusic
         })
     }else{
-        res.status(200).json({
+        res.status(204).json({
             Message : 'Here is Your all Music !',
             Data :  'No Music is there in your playlist'
         })
@@ -43,7 +43,7 @@ app.post('/addmusic', ( req, res ) => {
         return music.name === name;
     })
     if(musicExist){
-        res.status(201).json({
+        res.status(406).json({
             Message : 'New Music Not Added , it\'s Already Exist !',
             Data : newMusic
         })
@@ -74,7 +74,7 @@ app.put('/updatemusic/:name', ( req, res) => {
     if(musicfound){
         if((musicfound.name !== newName) || (musicfound.favourite !== favourite)){
             if(newmusicExist){
-                res.status(500).json({
+                res.status(406).json({
                     Message : 'This Music with same name already Exist . Hence, Not Updated !',
                     Data : `music name : ${newName}`
                 })
@@ -83,9 +83,9 @@ app.put('/updatemusic/:name', ( req, res) => {
                 musicfound.favourite = favourite;
                 fs.writeFile('./MusicDatabase.json',JSON.stringify(myMusics), err => {
                     if(err){
-                        res.status(401).send('Internal error !')
+                        res.status(501).send('Internal error !')
                     }else{
-                        res.status(200).json({
+                        res.status(202).json({
                             Message : 'Music Updated !',
                             Data : musicfound
                         })
@@ -93,13 +93,13 @@ app.put('/updatemusic/:name', ( req, res) => {
                 })
             }
         }else{
-            res.status(400).json({
+            res.status(406).json({
                 Message : 'Not Updated !',
                 Data : 'Original Data Not Changed'
             })
         }  
     }else{
-        res.status(500).json({
+        res.status(204).json({
             Message : 'This Music is Not in your list . Hence, Not Updated !',
             Data : `music name : ${name}`
         })
@@ -116,22 +116,22 @@ app.put('/assignfavourite/:name', ( req, res) => {
             musicfound.favourite = favourite;
             fs.writeFile('./MusicDatabase.json',JSON.stringify(myMusics), err => {
                 if(err){
-                    res.status(401).send('Internal error !')
+                    res.status(500).send('Internal error !')
                 }else{
-                    res.status(200).json({
+                    res.status(201).json({
                         Message : 'Music Updated !',
                         Data : musicfound
                     })
                 }
             })
         } else{
-            res.status(400).json({
+            res.status(406).json({
                 Message : 'Not assign Favourite  !',
                 Data : 'Original Data Not Changed'
             })
         } 
     }else{
-        res.status(500).json({
+        res.status(204).json({
             Message : 'This Music is Not in your list . Hence, Not assign Favourite !',
             Data : `music name : ${name}`
         })
@@ -153,14 +153,14 @@ app.delete('/delete/:name', (req, res) => {
                     Data : `music name : ${name}`
                 })
             }else{
-                res.status(500).json({
+                res.status(200).json({
                     Message : 'This Music is Deleted !',
                     Data : `music name : ${name}`
                 })
             }
         })
     }else{
-        res.status(500).json({
+        res.status(406).json({
             Message : 'This Music is Not in your list . Hence, Not Deleted !',
             Data : `music name : ${name}`
         })
